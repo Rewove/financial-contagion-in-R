@@ -29,9 +29,14 @@ main <- function(){
         count_contagion <- count_contagion +1
         percentage_cont <- r/network_size
         sum_percentages <- sum_percentages + percentage_cont
-      }
+      } 
       proba_contagion <- count_contagion / simulation_times
-      exten_contagion <- sum_percentages / count_contagion
+      if (count_contagion != 0){
+        exten_contagion <- sum_percentages / count_contagion
+      } else{
+        exten_contagion <- 0
+      }
+      
     }
     y_prob <- cbind(y_prob, proba_contagion)
     y_exte <- cbind(y_exte, exten_contagion)
