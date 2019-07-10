@@ -1,0 +1,6 @@
+install.packages("igraph")
+library(igraph)
+er <- sample_gnm(n=100, m=40) 
+er2 <- sample_gnp(n=100, p=3/99, TRUE)
+e <- E(er2)
+length(e)
