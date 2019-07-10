@@ -30,16 +30,14 @@ main <- function(){
         percentage_cont <- r/network_size
         sum_percentages <- sum_percentages + percentage_cont
       }
-    proba_contagion <- count_contagion / simulation_times
-    exten_contagion <- sum_percentages / count_contagion
-    
+      proba_contagion <- count_contagion / simulation_times
+      exten_contagion <- sum_percentages / count_contagion
+    }
     y_prob <- cbind(y_prob, proba_contagion)
     y_exte <- cbind(y_exte, exten_contagion)
-    }
-    plot(x_average_dgree, y_prob, pch=4)
-    points(x_average_dgree, y_exte, pch=16)
   }
-  
+  plot(x_average_dgree, y_prob, pch=4)
+  points(x_average_dgree, y_exte, pch=16)
 }
 
 main()
