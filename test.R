@@ -52,3 +52,62 @@ results
 plot(results)
 
 
+network_size <- 100
+simulation_times <- 10
+x_average_dgree <- seq(0, 10.1, 1)
+prob <- x_average_dgree/(network_size -1)
+contagion_threshould <- 0.05
+threshould <- network_size * contagion_threshould
+
+main <- function(){
+  y_prob <- c()
+  y_exte <- c()
+  for (j in prob) {
+    print('Doing ')
+    count_contagion <- 0
+    sum_percentages <- 0
+    for (i in 1:simulation_times){
+      #print('Doing No:')
+      #print(i+1)
+      #print('At average degree:')
+      #print(round(j*(network_size-1)))
+      G <- create_network(network_size, j)
+      r <- simulate_bankrupt(G, type = 'num')
+      r <- as.numeric(r)
+      #print('Here in this simulation have bankrupt banks:')
+      #print(r)
+      if (r > threshould){
+        count_contagion <- count_contagion +1
+        percentage_cont <- r/network_size
+        sum_percentages <- sum_percentages + percentage_cont
+      } 
+      proba_contagion <- count_contagion / simulation_times
+      if (count_contagion != 0){
+        exten_contagion <- sum_percentages / count_contagion
+      } else{
+        exten_contagion <- 0
+      }
+      
+    }
+    y_prob <- cbind(y_prob, proba_contagion)
+    y_exte <- cbind(y_exte, exten_contagion)
+  }
+  plot(x_average_dgree, y_prob, pch=4)
+  points(x_average_dgree, y_exte, pch=16)
+}
+
+main()
+
+
+test <- function(){
+  for ( i in 1:10){
+    for (j in 1:10){
+      sprintf('%s',i*j)
+    }
+  }
+}
+test()
+
+print('dafaaf',1)
+a = 11
+print('dafaaf'+a)

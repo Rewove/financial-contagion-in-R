@@ -20,11 +20,18 @@ main <- function(){
   for (j in prob) {
     count_contagion <- 0
     sum_percentages <- 0
+    print('Doing simulation on Average Degree:')
+    print(j*(network_size-1))
     for (i in 1:simulation_times){
-      sprintf('Doing No. %s test at AD %s', i+1, round(j*(network_size-1)))
-      G <- create_network(network_size, prob)
+      # print('Doing No:')
+      # print(i+1)
+      # print('At average degree:')
+      # print(round(j*(network_size-1)))
+      G <- create_network(network_size, j)
       r <- simulate_bankrupt(G, type = 'num')
       r <- as.numeric(r)
+      # print('Here in this simulation have bankrupt banks:')
+      # print(r)
       if (r > threshould){
         count_contagion <- count_contagion +1
         percentage_cont <- r/network_size
@@ -41,8 +48,16 @@ main <- function(){
     y_prob <- cbind(y_prob, proba_contagion)
     y_exte <- cbind(y_exte, exten_contagion)
   }
-  plot(x_average_dgree, y_prob, pch=4)
+  results = data.frame(y_prob, y_exte)
+  write.table(results,file="results.csv",quote=F,col.name=F,row.names=F)
+  
+  plot(x_average_dgree, y_prob, pch=4, ylim=c(0,1),
+       ylab = 'Probability and Extent of Contagion',
+       xlab = 'Average Degree (Connectivity)')
   points(x_average_dgree, y_exte, pch=16)
+  titil(main='Probability and Extent of Contagion', 
+        sub='Random Choose One Bank Bankrupt on ER Random Network')
+  
 }
 
 main()
