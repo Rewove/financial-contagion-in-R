@@ -42,10 +42,11 @@ system.time({
 
 starts <- rep(100, 40)
 fx <- function(nstart) kmeans(Boston, 4, nstart=nstart)
+
 numCores <- detectCores()
 numCores
 system.time(
-  results1, results2 <- mclapply(x_average_dgree, doing, mc.cores = numCores)
+  results <- mclapply(x_average_dgree, doing, mc.cores = numCores)
 )
 
 results
@@ -63,46 +64,55 @@ main <- function(){
   y_prob <- c()
   y_exte <- c()
   for (j in prob) {
-    print('Doing ')
     count_contagion <- 0
     sum_percentages <- 0
+    print('Doing simulation on Average Degree:')
+    print(j*(network_size-1))
+    
     for (i in 1:simulation_times){
-      #print('Doing No:')
-      #print(i+1)
-      #print('At average degree:')
-      #print(round(j*(network_size-1)))
+      # print('Doing No:')
+      # print(i+1)
+      # print('At average degree:')
+      # print(round(j*(network_size-1)))
       G <- create_network(network_size, j)
       r <- simulate_bankrupt(G, type = 'num')
       r <- as.numeric(r)
-      #print('Here in this simulation have bankrupt banks:')
-      #print(r)
+      # print('Here in this simulation have bankrupt banks:')
+      # print(r)
       if (r > threshould){
         count_contagion <- count_contagion +1
         percentage_cont <- r/network_size
         sum_percentages <- sum_percentages + percentage_cont
-      } 
-      proba_contagion <- count_contagion / simulation_times
-      if (count_contagion != 0){
-        exten_contagion <- sum_percentages / count_contagion
-      } else{
-        exten_contagion <- 0
       }
-      
+    }
+    
+    proba_contagion <- count_contagion / simulation_times
+    if (count_contagion != 0){
+      exten_contagion <- sum_percentages / count_contagion
+    } else{
+      exten_contagion <- 0
     }
     y_prob <- cbind(y_prob, proba_contagion)
     y_exte <- cbind(y_exte, exten_contagion)
   }
-  plot(x_average_dgree, y_prob, pch=4)
+  
+  results = data.frame(y_prob, y_exte)
+  write.table(results,file="results.csv",quote=F,col.name=F,row.names=F)
+  
+  plot(x_average_dgree, y_prob, pch=4, ylim=c(0,1),
+       ylab = 'Probability and Extent of Contagion',
+       xlab = 'Average Degree (Connectivity)')
   points(x_average_dgree, y_exte, pch=16)
+  titil(main='Probability and Extent of Contagion', 
+        sub='Random Choose One Bank Bankrupt on ER Random Network')
+  
 }
-
-main()
 
 
 test <- function(){
   for ( i in 1:10){
     for (j in 1:10){
-      sprintf('%s',i*j)
+      cat()
     }
   }
 }
@@ -111,3 +121,49 @@ test()
 print('dafaaf',1)
 a = 11
 print('dafaaf'+a)
+
+
+simulate_function <- function(prob){
+  count_contagion <- 0
+  sum_percentages <- 0
+  
+  for (i in 1:simulation_times){
+    if (i %% 10 == 0){
+      cat('Doing test No.')
+      cat(i)
+      cat('\n')
+    }
+    G <- create_network(network_size, prob)
+    r <- simulate_bankrupt(G, type = 'num')
+    r <- as.numeric(r)
+    if (r > threshould){
+      count_contagion <- count_contagion +1
+      percentage_cont <- r/network_size
+      sum_percentages <- sum_percentages + percentage_cont
+    }
+  }
+  proba_contagion <- count_contagion / simulation_times
+  if (count_contagion != 0){
+    exten_contagion <- sum_percentages / count_contagion
+  } else{
+    exten_contagion <- 0
+  }
+  results <- list(proba_contagion, exten_contagion)
+  results=data.frame(results)
+  write.table(results,file="results.csv",append=T,quote=F,col.name=F,row.names=F)
+}
+
+
+numCores <- detectCores()
+numCores
+system.time(
+  results <- mclapply(prob, simulate_function, mc.cores = numCores)
+)
+
+
+a = simulate_function(3/999)
+
+results=data.frame(a)
+write.table(results,file="results.csv",append=T,quote=F,col.name=F,row.names=F)
+b=read.csv('results.csv',header=F)
+b
