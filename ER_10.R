@@ -8,7 +8,7 @@ library(parallel)
 
 network_size <- 1000
 simulation_times <- 100
-x_average_dgree <- seq(0, 10.1, 0.2)
+x_average_dgree <- seq(0, 10.1, 0.2)  # 0.2
 prob <- x_average_dgree/(network_size -1)
 contagion_threshould <- 0.05
 threshould <- network_size * contagion_threshould
@@ -22,6 +22,7 @@ main <- function(){
     sum_percentages <- 0
     print('Doing simulation on Average Degree:')
     print(j*(network_size-1))
+    
     for (i in 1:simulation_times){
       # print('Doing No:')
       # print(i+1)
@@ -36,18 +37,19 @@ main <- function(){
         count_contagion <- count_contagion +1
         percentage_cont <- r/network_size
         sum_percentages <- sum_percentages + percentage_cont
-      } 
-      proba_contagion <- count_contagion / simulation_times
-      if (count_contagion != 0){
-        exten_contagion <- sum_percentages / count_contagion
-      } else{
-        exten_contagion <- 0
       }
-      
+    }
+    
+    proba_contagion <- count_contagion / simulation_times
+    if (count_contagion != 0){
+      exten_contagion <- sum_percentages / count_contagion
+    } else{
+      exten_contagion <- 0
     }
     y_prob <- cbind(y_prob, proba_contagion)
     y_exte <- cbind(y_exte, exten_contagion)
   }
+  
   results = data.frame(y_prob, y_exte)
   write.table(results,file="results.csv",quote=F,col.name=F,row.names=F)
   
