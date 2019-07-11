@@ -7,8 +7,8 @@ source('simulate_bankrupt.R')
 library(parallel)
 
 network_size <- 1000
-simulation_times <- 100
-x_average_dgree <- seq(0, 10.1, 1)  # 0.2
+simulation_times <- 100  # 100
+x_average_dgree <- seq(0, 10.1, 0.2)  # 0.2
 prob <- x_average_dgree/(network_size -1)
 contagion_threshould <- 0.05
 threshould <- network_size * contagion_threshould
@@ -62,4 +62,7 @@ main <- function(){
   
 }
 
-main()
+system.time(
+  main()
+)
+
