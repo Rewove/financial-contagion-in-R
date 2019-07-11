@@ -8,7 +8,7 @@ library(parallel)
 
 network_size <- 1000
 simulation_times <- 100
-x_average_dgree <- seq(0, 10.1, 0.2)  # 0.2
+x_average_dgree <- seq(0, 10.1, 1)  # 0.2
 prob <- x_average_dgree/(network_size -1)
 contagion_threshould <- 0.05
 threshould <- network_size * contagion_threshould
@@ -57,7 +57,7 @@ main <- function(){
        ylab = 'Probability and Extent of Contagion',
        xlab = 'Average Degree (Connectivity)')
   points(x_average_dgree, y_exte, pch=16)
-  titil(main='Probability and Extent of Contagion', 
+  title(main='Probability and Extent of Contagion', 
         sub='Random Choose One Bank Bankrupt on ER Random Network')
   
 }
