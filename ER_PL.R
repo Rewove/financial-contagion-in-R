@@ -17,15 +17,22 @@ registerDoParallel(cl)
 # use for z=1:10 your range, the .combine declares how to combine your dataframe afterwrads,
 #.inorder makes sure it's sorted and the values are in the right order (TRUE is default)
 df<-foreach(z = 1:10, .combine=rbind, .inorder=TRUE) %dopar%{
+  etwork_size <- 1000
+  simulation_times <- 100
+  x_average_dgree <- seq(0, 10.1, 1)  # 0.2
+  prob <- x_average_dgree/(network_size -1)
+  contagion_threshould <- 0.05
+  threshould <- network_size * contagion_threshould
   y_prob = list()
   y_exte = list()
   for (i in 1:porb){
     count_contagion <- 0
     sum_percentages <- 0
     cat('Doing simulation on Average Degree:')
-    cat(j*(network_size-1))
+    cat(prob[i]*(network_size-1))
     cat('\n')
     for (j in 1:simulation_times){
+      library(igraph)
       G <- create_network(network_size, j)
       r <- simulate_bankrupt(G, type = 'num')
       r <- as.numeric(r)
@@ -51,7 +58,7 @@ df<-foreach(z = 1:10, .combine=rbind, .inorder=TRUE) %dopar%{
   points(x_average_dgree, y_exte, pch=16)
   title(main='Probability and Extent of Contagion', 
         sub='Random Choose One Bank Bankrupt on ER Random Network')
-  return(do.call(rbind, Map(data.frame, A=list_a, B=list_b)))
+  return(do.call(rbind, Map(data.frame, A=y_prob, B=y_exte)))
 }
 #foreach returns nested lists, so you can change it to a dataframe easily
 df= as.data.frame(df)
