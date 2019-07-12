@@ -5,7 +5,10 @@ source('simulate_bankrupt.R')
 network_size <- 1000
 simulation_times <- 50  # 100
 average_dgeree = 3  # 7
-p_cc <- seq(0, 0.2, 0.04) 
+cat('The average degree cosnsidered here is:')
+cat(average_degree)
+cat('\n')
+p_cc <- seq(0.003, 0.012, 0.0005)
 contagion_threshould <- 0.05
 threshould <- network_size * contagion_threshould
 
@@ -16,8 +19,8 @@ main <- function(){
   for (j in p_cc) {
     count_contagion <- 0
     sum_percentages <- 0
-    cat('Doing simulation on Average Degree: ')
-    cat(j*(network_size-1))
+    cat('Doing simulation on p_cc: ')
+    cat(j)
     cat('\n')
     
     for (i in 1:simulation_times){
@@ -48,15 +51,16 @@ main <- function(){
     y_exte <- cbind(y_exte, exten_contagion)
   }
   
-  results = data.frame(y_prob, y_exte)
-  write.table(results,file="results_sbm.csv",quote=F,col.name=F,row.names=F)
   
-  plot(x_average_dgree, y_prob, pch=4, ylim=c(0,1),
+  plot(p_cc, y_prob, pch=4, ylim=c(0,1),
        ylab = 'Probability and Extent of Contagion',
        xlab = 'p_cc: Probability of Core Connectivity')
-  points(x_average_dgree, y_exte, pch=16)
+  points(p_cc, y_exte, pch=16)
   title(main='Probability and Extent of Contagion at z = 3', 
         sub='Random Choose One Bank Bankrupt on SBM Network')
+  
+  results = data.frame(y_prob, y_exte)
+  write.table(results,file="results_sbm.csv",quote=F,col.name=F,row.names=F)
   
 }
 
