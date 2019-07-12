@@ -11,7 +11,7 @@ ER_network <- function(network_size, prob){
   threshold = prob * network_size
   for (i in 1:network_size){
     for (j in 1:network_size){
-      if ( i != j){
+      if (i != j){
         if (links[i,j] < threshold){
           a[i,j] = 1
         }
@@ -21,16 +21,74 @@ ER_network <- function(network_size, prob){
   G = graph_from_adjacency_matrix(a, mode = 'directed')
   return (G)
 }
-
 # test
 # a = ER_network(100, 3/99)
-# cat(length(E(a))/100)
+# cat(length(E(a))/20)
 
-create_network <- function(network_size, prob, print_out = FALSE){
+# if SBM = ER:
+# z = p * (N - 1/2)
+# so for a certain z the p is:
+# p = z/(network_size - 1/2)
+
+SBM_network <- function(network_size, average_degree, p_cc){
+  core_size <- network_size/2
+  periphery_size <- network_size/2
+  p_pp <- (average_degree - (network_size - 1) * p_cc / 4) * (4/(3 * network_size -1))
+  p_cp <- p_pp
+  a = matrix(0, network_size, network_size)
+  links = sample(c(1:network_size), size = network_size * network_size, replace = T)
+  links = matrix(links, ncol = network_size, byrow = T)
+  threshold_ppp = p_pp * network_size
+  threshold_pcp = p_cp * network_size
+  threshold_pcc = p_cc * network_size
+  
+  for (i in 1:network_size){
+    for (j in 1:network_size){
+      if (i != j){
+        if (i <= network_size/2){
+          # left region in field
+          if (j <= network_size/2){
+            # left and upper region -> cc
+            threshold <- threshold_pcc
+          } else {
+            # left and lower region -> cp
+            threshold <- threshold_pcp
+          }
+        } else {
+          # right reigion in field
+          if (j <= network_size/2){
+            # right upper region -> cp / pc
+            threshold <- threshold_pcp
+          } else {
+            # right lower rigion -> pp
+            threshold <- threshold_ppp
+          }
+        }
+        
+        if (links[i,j] < threshold){
+          a[i,j] = 1
+        }
+        
+      }
+    }
+  }
+  
+  G = graph_from_adjacency_matrix(a, mode = 'directed')
+  return (G)
+}
+
+create_network <- function(network_size, parameter, type , p_cc = 0.003001501, print_out = FALSE){
   
   # first creat the graph without weights
-  # G <- sample_gnp(n=network_size, p=prob, TRUE)
-  G <- ER_network(network_size, prob)
+  if (type == 'er'){
+    # G <- sample_gnp(n=network_size, p=prob, TRUE)
+    G <- ER_network(network_size, prob = parameter)
+  } else if (type == 'sbm'){
+    G <- SBM_network(network_size, average_degree = parameter, p_cc)
+  } else {
+    cat('The setting of the network type is wrong.')
+  }
+  
   M <- length(E(G))
   edge_df <- ends(G, E(G))
   if (print_out == TRUE) sprintf('The network have %s edges, hence the average degree is %s',
@@ -41,29 +99,43 @@ create_network <- function(network_size, prob, print_out = FALSE){
   #print('before')
   #print(edge_weight)
   for (i in 1:network_size) {
-    #print('node:')
-    #print(i)
+    if (print_out == TRUE){
+      cat('node:')
+      cat(i)
+      cat('\n')
+    }
     
     nodes_in <- neighbors(G, i, 'in')
-    #print('has neighbors:')
-    #print(nodes_in)
+    if (print_out == TRUE){
+      cat('has neighbors:')
+      cat(nodes_in)
+      cat('\n')
+    }
     
     number_of_in <- length(nodes_in)
     if (number_of_in != 0){
       this_weight <- AiIB / number_of_in
       ENDS = as.vector(rbind(as.numeric(nodes_in), i))
       SpecialEdges = get.edge.ids(G, ENDS)
-      #print('the edges need to change')
-      #print(SpecialEdges)
+      if (print_out == TRUE){
+        cat('the edges need to change')
+        cat(SpecialEdges)
+        cat('\n')
+      }
       E(G)$weight[SpecialEdges] = c(rep(this_weight, number_of_in))
-      #print('after')
-      #print(E(G)$weight[SpecialEdges])
+      if (print_out == TRUE){
+        cat('after')
+        cat(E(G)$weight[SpecialEdges])
+        cat('\n')
+      }
     } else{
       this_weight <- 0
     }
   }
-  #print(E(G)$weight)
-  if (print_out == TRUE) E(G)$weight
+  if (print_out == TRUE){
+    cat(E(G)$weight)
+    cat('\n')
+  }
   return (G)
 }
 
