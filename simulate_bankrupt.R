@@ -2,7 +2,7 @@ library(igraph)
 # source('~/Desktop/network/judge_bankrupt.R')
 source('judge_bankrupt.R')
 
-simulate_bankrupt <- function(network, type = 'banks') {
+simulate_bankrupt <- function(network, type = 'banks', print_out=FALSE) {
   G <- network
   network_size <- length(V(G))
   initial_point <- as.numeric(sample(V(G), 1))
@@ -18,15 +18,38 @@ simulate_bankrupt <- function(network, type = 'banks') {
   
   while (simulate == TRUE){
     this_batch_neighbor = c()
+    if (print_out == TRUE){
+      cat('This batch bankrupt banks: ')
+      cat(this_batch_bankrupt)
+      cat('\n')
+    }
+    
     for (i in this_batch_bankrupt){
       nodes_out <- as.numeric(neighbors(G, i, 'out'))
       this_batch_neighbor = append(this_batch_neighbor, nodes_out)
     }
     this_batch_neighbor = unique(this_batch_neighbor)
+    if (print_out == TRUE){
+      cat('This batch neighbot: ')
+      cat(this_batch_neighbor)
+      cat('\n')
+    }
+    
     this_batch_bankrupt = judge_bankrupt(G, this_batch_neighbor, bankrupt_bank)
     this_batch_bankrupt = unique(this_batch_bankrupt)
+    if (print_out == TRUE){
+      cat('This batch bankrupt (after): ')
+      cat(this_batch_bankrupt)
+      cat('\n')
+    }
+    
     bankrupt_bank = append(bankrupt_bank, this_batch_bankrupt)
     bankrupt_bank = unique(bankrupt_bank)
+    if (print_out == TRUE){
+      cat('The bankrupt (total): ')
+      cat(bankrupt_bank)
+      cat('\n')
+    }
     
     if (length(bankrupt_bank) == number_bankrupt){
       simulate = FALSE
