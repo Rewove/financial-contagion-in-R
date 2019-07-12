@@ -1,4 +1,4 @@
-install.packages("igraph")
+# install.packages("igraph")
 library(igraph)
 
 er <- sample_gnp(n=10, p=3/9, TRUE)
@@ -18,10 +18,9 @@ res <- data.frame()
 res <- rbind(res, r)
 
 system.time({
-  G = create_network(1000, 3/999)
-  #plot(G, layout=layout_in_circle)
-  b = simulate_bankrupt(G, type ='num')
-  b
+  
+    G = SBM_network(1000, 3/999, 0.1)
+    #plot(G, layout=layout_in_circle
 })
 
 
