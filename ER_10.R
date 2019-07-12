@@ -4,7 +4,6 @@
 source('create_network.R')
 source('judge_bankrupt.R')
 source('simulate_bankrupt.R')
-library(parallel)
 
 network_size <- 1000
 simulation_times <- 100  # 100
@@ -20,15 +19,16 @@ main <- function(){
   for (j in prob) {
     count_contagion <- 0
     sum_percentages <- 0
-    print('Doing simulation on Average Degree:')
-    print(j*(network_size-1))
+    cat('Doing simulation on Average Degree: ')
+    cat(j*(network_size-1))
+    cat('\n')
     
     for (i in 1:simulation_times){
       # print('Doing No:')
       # print(i+1)
       # print('At average degree:')
       # print(round(j*(network_size-1)))
-      G <- create_network(network_size, j)
+      G <- create_network(network_size, j, type = 'er')
       r <- simulate_bankrupt(G, type = 'num')
       r <- as.numeric(r)
       # print('Here in this simulation have bankrupt banks:')
