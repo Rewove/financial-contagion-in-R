@@ -77,6 +77,21 @@ SBM_network <- function(network_size, average_degree, p_cc){
   return (G)
 }
 
+
+get_low_bound_cc <- function(average_degree, network_size = 1000){
+  # this bound happened at the pp = cc
+  pcc = average_degree/(network_size-0.5)
+  return(pcc)
+}
+
+get_up_bound_cc <- function(average_degree, network_size = 1000){
+  # this bound happened at the pp = 0
+  ppp = 0
+  pcc = (average_degree - ppp / (4*(3*network_size - 1)))*4/(network_size-1)
+  return (pcc)
+}
+
+
 create_network <- function(network_size, parameter, type , p_cc = 0.003001501, print_out = FALSE){
   
   # first creat the graph without weights
