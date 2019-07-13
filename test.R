@@ -19,8 +19,13 @@ res <- rbind(res, r)
 
 system.time({
   
-    G = SBM_network(1000, 3/999, 0.1)
-    #plot(G, layout=layout_in_circle
+    G = SBM_network(1000, 3, 0.003001501)
+    in_degree = sum(degree(G, mode='out'))
+    in_degree
+    out_degree = sum(degree(G, mod = 'in'))
+    out_degree
+    print(length(E(G))/1000)
+    
 })
 
 
