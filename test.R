@@ -19,12 +19,12 @@ res <- rbind(res, r)
 
 system.time({
   
-    G = SBM_network(1000, 3, 0.003001501)
-    in_degree = sum(degree(G, mode='out'))
-    in_degree
-    out_degree = sum(degree(G, mod = 'in'))
-    out_degree
-    print(length(E(G))/1000)
+G = SBM_network(1000, 3, 0.003001501)
+in_degree = sum(degree(G, mode='out'))
+in_degree
+out_degree = sum(degree(G, mod = 'in'))
+out_degree
+print(length(E(G))/1000)
     
 })
 
@@ -171,3 +171,23 @@ results=data.frame(a)
 write.table(results,file="results.csv",append=T,quote=F,col.name=F,row.names=F)
 b=read.csv('results.csv',header=F)
 b
+
+
+testing <- function(){
+  a=0
+  b=0
+  list_b=list()
+  list_a=list()
+  for (i in 1:10){
+    for (j in 100:110){
+      a=b+i
+      b=a+j
+    }
+    list_b= cbind(list_b, b)
+    list_a= cbind(list_a, a)
+  }
+  return(do.call(rbind, Map(data.frame, list_a=list_a, list_b=list_b)))
+}
+a=testing()
+a
+a$A

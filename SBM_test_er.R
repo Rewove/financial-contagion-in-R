@@ -14,7 +14,7 @@ threshould <- network_size * contagion_threshould
 main <- function(){
   y_prob = list()
   y_exte = list()
-  for (j in length(average_degree)) {
+  for (j in 1:length(average_degree)) {
     count_contagion <- 0
     sum_percentages <- 0
     cat('Doing simulation on p_cc: ')
@@ -31,7 +31,7 @@ main <- function(){
         cat(i)
         cat('...')
       }
-      G <- create_network(network_size, parameter = average_dgeree[j], 
+      G <- create_network(network_size, parameter = average_degree[j], 
                           p_cc = p_cc[j],  type = 'sbm')
       r <- simulate_bankrupt(G, type = 'num')
       r <- as.numeric(r)
@@ -53,7 +53,6 @@ main <- function(){
     y_prob <- cbind(y_prob, proba_contagion)
     y_exte <- cbind(y_exte, exten_contagion)
   }
-  
   
   plot(average_degree, y_prob, pch=4, ylim=c(0,1),
        ylab = 'Probability and Extent of Contagion',

@@ -70,6 +70,7 @@ system.time({
   write.table(results,file="results_sbm_5.csv",quote=F,col.name=F,row.names=F)
   plot_the_figure(p_cc, results$y_prob, results$y_exte, 
                   network_name = 'SBM Network',
+                  xlab = 'p_cc: Probability of Core Connectivity',
                   notes = 'at z=5')
 })
 

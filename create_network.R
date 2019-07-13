@@ -34,6 +34,9 @@ SBM_network <- function(network_size, average_degree, p_cc){
   core_size <- network_size/2
   periphery_size <- network_size/2
   p_pp <- (average_degree - (network_size - 1) * p_cc / 4) * (4/(3 * network_size -1))
+  #cat('p_pp is:')
+  #cat(p_pp)
+  #cat('\n')
   p_cp <- p_pp
   a = matrix(0, network_size, network_size)
   links = sample(c(1:network_size), size = network_size * network_size, replace = T)
@@ -46,7 +49,7 @@ SBM_network <- function(network_size, average_degree, p_cc){
     for (j in 1:network_size){
       if (i != j){
         if (i <= network_size/2){
-          # left region in field
+          # left region (Core) in field
           if (j <= network_size/2){
             # left and upper region -> cc
             threshold <- threshold_pcc

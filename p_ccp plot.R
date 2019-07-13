@@ -10,7 +10,7 @@ p_pp2 <- (average_degree2 - (network_size - 1) * p_cc / 4) * (4/(3 * network_siz
 
 
 #scatter3D(average_degree, p_cc, p_pp)
-plot(p_cc, p_pp1)
+plot(p_cc, p_pp1, xlim=c(0,0.2))
 points(p_cc, p_pp2)
 
 p_cc <- 0.003
