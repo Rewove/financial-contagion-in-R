@@ -3,11 +3,9 @@ source('judge_bankrupt.R')
 source('simulate_bankrupt.R')
 
 network_size <- 1000
-simulation_times <- 50  # 100
-average_degree = seq(0,10,1)
-cat('The average degree cosnsidered here is:')
-cat(average_degree)
-cat('\n')
+simulation_times <- 100  # 100
+average_degree = seq(0,10,0.2)
+
 p_cc <- average_degree/(network_size-0.5)
 contagion_threshould <- 0.05
 threshould <- network_size * contagion_threshould
@@ -16,20 +14,25 @@ threshould <- network_size * contagion_threshould
 main <- function(){
   y_prob = list()
   y_exte = list()
-  for (j in p_cc) {
+  for (j in length(average_degree)) {
     count_contagion <- 0
     sum_percentages <- 0
     cat('Doing simulation on p_cc: ')
-    cat(j)
+    cat(p_cc[j])
     cat('\n')
     
     for (i in 1:simulation_times){
-      # print('Doing No:')
-      # print(i+1)
-      # print('At average degree:')
-      # print(round(j*(network_size-1)))
-      G <- create_network(network_size, parameter = average_dgeree, 
-                          p_cc = j,  type = 'sbm')
+      if (i==100){
+        cat('No.')
+        cat(i)
+        cat('\n')
+      } else if (i %% 10 == 0) {
+        cat('No.')
+        cat(i)
+        cat('...')
+      }
+      G <- create_network(network_size, parameter = average_dgeree[j], 
+                          p_cc = p_cc[j],  type = 'sbm')
       r <- simulate_bankrupt(G, type = 'num')
       r <- as.numeric(r)
       # print('Here in this simulation have bankrupt banks:')
@@ -60,7 +63,7 @@ main <- function(){
         sub='Random Choose One Bank Bankrupt on SBM Network')
   
   results = data.frame(y_prob, y_exte)
-  write.table(results,file="results_sbm.csv",quote=F,col.name=F,row.names=F)
+  write.table(results,file="results_sbm_er.csv",quote=F,col.name=F,row.names=F)
   
 }
 
