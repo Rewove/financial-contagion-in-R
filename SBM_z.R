@@ -6,11 +6,12 @@ source('plot_figuer.R')
 network_size <- 1000
 simulation_times <- 100 
 average_degree = 5
+
 cat('The average degree cosnsidered here is:')
 cat(average_degree)
 cat('\n')
 
-p_cc <- seq(get_low_bound_cc(average_degree), get_up_bond_cc(average_degree), 0.0005)
+p_cc <- seq(get_low_bound_cc(average_degree), get_up_bound_cc(average_degree), 0.0005)
 
 contagion_threshould <- 0.05
 threshould <- network_size * contagion_threshould
@@ -27,10 +28,15 @@ main <- function(){
     cat('\n')
     
     for (i in 1:simulation_times){
-      # print('Doing No:')
-      # print(i+1)
-      # print('At average degree:')
-      # print(round(j*(network_size-1)))
+      if (i==100){
+        cat('No.')
+        cat(i)
+        cat('\n')
+      } else if (i %% 10 == 0) {
+        cat('No.')
+        cat(i)
+        cat('...')
+      }
       G <- create_network(network_size, parameter = average_degree, 
                           p_cc = j,  type = 'sbm')
       r <- simulate_bankrupt(G, type = 'num')
@@ -59,7 +65,9 @@ main <- function(){
 
 system.time({
   results <- main()
-  write.table(results,file="results_sbm.csv",quote=F,col.name=F,row.names=F)
+  cat('Saving the results ... ')
+  cat('\n')
+  write.table(results,file="results_sbm_5.csv",quote=F,col.name=F,row.names=F)
   plot_the_figure(p_cc, results$y_prob, results$y_exte, 
                   network_name = 'SBM Network',
                   notes = 'at z=5')
