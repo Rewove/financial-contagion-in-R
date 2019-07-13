@@ -6,7 +6,9 @@ AiIB = 0.2
 
 ER_network <- function(network_size, prob){
   a = matrix(0, network_size, network_size)
-  links = sample(c(1:network_size), size = network_size * network_size, replace = T)
+  #links = sample(c(1:network_size), size = network_size * network_size, replace = T)
+  prob = prob+1/(network_size-1)
+  links = sample(seq(1,network_size,0.1), size = network_size * network_size, replace = T)
   links = matrix(links, ncol = network_size, byrow = T)
   threshold = prob * network_size
   for (i in 1:network_size){
@@ -24,6 +26,7 @@ ER_network <- function(network_size, prob){
 # test
 # a = ER_network(100, 3/99)
 # cat(length(E(a))/20)
+#length(E(sample_gnp(n=1000, p=4/999, TRUE)))/1000
 
 # if SBM = ER:
 # z = p * (N - 1/2)
@@ -31,6 +34,7 @@ ER_network <- function(network_size, prob){
 # p = z/(network_size - 1/2)
 
 SBM_network <- function(network_size, average_degree, p_cc){
+  adjust = 1/(network_size-1)
   core_size <- network_size/2
   periphery_size <- network_size/2
   p_pp <- (average_degree - (network_size - 1) * p_cc / 4) * (4/(3 * network_size -1))
@@ -38,8 +42,11 @@ SBM_network <- function(network_size, average_degree, p_cc){
   #cat(p_pp)
   #cat('\n')
   p_cp <- p_pp
+  p_cc <- p_cc+adjust
+  p_cp <- p_cp+adjust
+  p_pp <- p_pp+adjust
   a = matrix(0, network_size, network_size)
-  links = sample(c(1:network_size), size = network_size * network_size, replace = T)
+  links = sample(seq(1,network_size,0.1), size = network_size * network_size, replace = T)
   links = matrix(links, ncol = network_size, byrow = T)
   threshold_ppp = p_pp * network_size
   threshold_pcp = p_cp * network_size
