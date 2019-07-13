@@ -3,12 +3,12 @@ source('judge_bankrupt.R')
 source('simulate_bankrupt.R')
 
 network_size <- 1000
-simulation_times <- 50  # 100
-average_dgeree = 3  # 7
+simulation_times <- 100  # 100
+average_degree = 7  # 3   7
 cat('The average degree cosnsidered here is:')
 cat(average_degree)
 cat('\n')
-p_cc <- seq(0.003, 0.012, 0.0005)
+p_cc <- seq(0.007, 0.0280, 0.0005) # 0.003, 0.012, 0.0005    0.007, 0.0280, 0.0005
 contagion_threshould <- 0.05
 threshould <- network_size * contagion_threshould
 
@@ -28,7 +28,7 @@ main <- function(){
       # print(i+1)
       # print('At average degree:')
       # print(round(j*(network_size-1)))
-      G <- create_network(network_size, parameter = average_dgeree, 
+      G <- create_network(network_size, parameter = average_degree, 
                           p_cc = j,  type = 'sbm')
       r <- simulate_bankrupt(G, type = 'num')
       r <- as.numeric(r)
@@ -56,7 +56,7 @@ main <- function(){
        ylab = 'Probability and Extent of Contagion',
        xlab = 'p_cc: Probability of Core Connectivity')
   points(p_cc, y_exte, pch=16)
-  title(main='Probability and Extent of Contagion at z = 3', 
+  title(main='Probability and Extent of Contagion at z = 7', 
         sub='Random Choose One Bank Bankrupt on SBM Network')
   
   results = data.frame(y_prob, y_exte)
