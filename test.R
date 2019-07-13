@@ -191,3 +191,84 @@ testing <- function(){
 a=testing()
 a
 a$A
+
+
+ER_network <- function(network_size, prob){
+  prob = prob+1/(network_size-1)
+  a = matrix(0, network_size, network_size)
+  links = sample(seq(1,network_size,0.1), size = network_size * network_size, replace = T)
+  links = matrix(links, ncol = network_size, byrow = T)
+  threshold = prob * network_size
+  for (i in 1:network_size){
+    for (j in 1:network_size){
+      if (i != j){
+        if (links[i,j] < threshold){
+          a[i,j] = 1
+        }
+      }
+    }
+  }
+  G = graph_from_adjacency_matrix(a, mode = 'directed')
+  return (G)
+}
+# test
+# a = ER_network(100, 3/99)
+# cat(length(E(a))/20)
+length(E(sample_gnp(n=1000, p=4/999, TRUE)))/1000
+length(E(ER_network(1000, 3.2/999)))/1000
+
+SBM_network <- function(network_size, average_degree, p_cc){
+  adjust = 1/(network_size-1)
+  core_size <- network_size/2
+  periphery_size <- network_size/2
+  p_pp <- (average_degree - (network_size - 1) * p_cc / 4) * (4/(3 * network_size -1))
+  #cat('p_pp is:')
+  #cat(p_pp)
+  #cat('\n')
+  p_cp <- p_pp
+  p_cc <- p_cc+adjust
+  p_cp <- p_cp+adjust
+  p_pp <- p_pp+adjust
+  a = matrix(0, network_size, network_size)
+  links = sample(seq(1,network_size,0.1), size = network_size * network_size, replace = T)
+  links = matrix(links, ncol = network_size, byrow = T)
+  threshold_ppp = p_pp * network_size
+  threshold_pcp = p_cp * network_size
+  threshold_pcc = p_cc * network_size
+  
+  for (i in 1:network_size){
+    for (j in 1:network_size){
+      if (i != j){
+        if (i <= network_size/2){
+          # left region (Core) in field
+          if (j <= network_size/2){
+            # left and upper region -> cc
+            threshold <- threshold_pcc
+          } else {
+            # left and lower region -> cp
+            threshold <- threshold_pcp
+          }
+        } else {
+          # right reigion in field
+          if (j <= network_size/2){
+            # right upper region -> cp / pc
+            threshold <- threshold_pcp
+          } else {
+            # right lower rigion -> pp
+            threshold <- threshold_ppp
+          }
+        }
+        
+        if (links[i,j] < threshold){
+          a[i,j] = 1
+        }
+        
+      }
+    }
+  }
+  
+  G = graph_from_adjacency_matrix(a, mode = 'directed')
+  return (G)
+}
+a=3.2
+length(E(SBM_network(1000,a,a/999.5)))/1000
