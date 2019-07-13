@@ -1,4 +1,4 @@
-plot_the_figure <- function(x, y1, y2, xlab, network_name = '', notes = ''){
+plot_the_figure <- function(x, y1, y2, xlab = '', network_name = '', notes = ''){
   # xlab = 'p_cc: Probability of Core Connectivity'
   # xlab = 'Average Degree (Connectivity)'
   # notes = 'at z=7'
@@ -12,3 +12,11 @@ plot_the_figure <- function(x, y1, y2, xlab, network_name = '', notes = ''){
         sub=subtitle)
 }
 
+file_name = 'results_sbm_3.csv'
+average_degree = 3
+# the csv file need changed with add comma
+data = read.csv(file_name, header =FALSE)
+x = seq(get_low_bound_cc(average_degree), get_up_bound_cc(average_degree), 0.0005)
+plot_the_figure(x, as.numeric(data$V1),as.numeric(data$V2),
+                xlab = 'p_cc: Probability of Core Connectivity',
+                network_name = 'SBM Network', notes = 'at z=3')
