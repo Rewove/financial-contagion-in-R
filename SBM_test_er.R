@@ -53,20 +53,18 @@ main <- function(){
     y_prob <- cbind(y_prob, proba_contagion)
     y_exte <- cbind(y_exte, exten_contagion)
   }
-  
-  plot(average_degree, y_prob, pch=4, ylim=c(0,1),
-       ylab = 'Probability and Extent of Contagion',
-       xlab = 'Average Degree')
-  points(average_degree, y_exte, pch=16)
-  title(main='SBM in ER mode', 
-        sub='Random Choose One Bank Bankrupt on SBM Network')
-  
-  results = data.frame(y_prob, y_exte)
   write.table(results,file="results_sbm_er.csv",quote=F,col.name=F,row.names=F)
-  
+  return(do.call(rbind, Map(data.frame, y_prob=y_prob, y_exte=y_exte)))
 }
 
-system.time(
-  main()
-)
+system.time({
+  results <- main()
+  cat('Saving the results ... ')
+  cat('\n')
+  write.table(results,file="results_sbm_er.csv",quote=F,col.name=F,row.names=F)
+  plot_the_figure(p_cc, results$y_prob, results$y_exte, 
+                  network_name = 'SBM Network',
+                  xlab = 'Average Degree (Connectivity)',
+                  notes = 'in ER Mode')
+})
 
