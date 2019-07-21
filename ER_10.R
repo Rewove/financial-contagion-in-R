@@ -24,15 +24,19 @@ main <- function(){
     cat('\n')
     
     for (i in 1:simulation_times){
-      # print('Doing No:')
-      # print(i+1)
-      # print('At average degree:')
-      # print(round(j*(network_size-1)))
+      if (i==100){
+        cat('No.')
+        cat(i)
+        cat('\n')
+      } else if (i %% 10 == 0) {
+        cat('No.')
+        cat(i)
+        cat('...')
+      }
       G <- create_network(network_size, j, type = 'er')
-      r <- simulate_bankrupt(G, type = 'num')
+      r <- simulate_bankrupt(G, method = 'biggest', type = 'num')
       r <- as.numeric(r)
-      # print('Here in this simulation have bankrupt banks:')
-      # print(r)
+      
       if (r > threshould){
         count_contagion <- count_contagion +1
         percentage_cont <- r/network_size
@@ -50,7 +54,8 @@ main <- function(){
     y_exte <- cbind(y_exte, exten_contagion)
   }
   
-  results = data.frame(y_prob, y_exte)
+  return(do.call(rbind, Map(data.frame, y_prob=y_prob, y_exte=y_exte)))
+  
   write.table(results,file="results.csv",quote=F,col.name=F,row.names=F)
   
   plot(x_average_dgree, y_prob, pch=4, ylim=c(0,1),
@@ -62,7 +67,13 @@ main <- function(){
   
 }
 
-system.time(
-  main()
-)
-
+system.time({
+  results <- main()
+  cat('Saving the results ... ')
+  cat('\n')
+  write.table(results,file="results_er_biggest.csv", sep=',', quote=F,col.name=F,row.names=F)
+  plot_the_figure(p_cc, results$y_prob, results$y_exte, 
+                  network_name = 'ER Network',
+                  xlab = 'Average Degree (Connectivity)',
+                  notes = 'With the Biggest Connected Bank Bankrupt')
+})
