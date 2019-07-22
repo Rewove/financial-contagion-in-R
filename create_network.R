@@ -110,6 +110,8 @@ create_network <- function(network_size, parameter, type , p_cc = 0.003001501, p
     G <- ER_network(network_size, prob = parameter)
   } else if (type == 'sbm'){
     G <- SBM_network(network_size, average_degree = parameter, p_cc)
+  } else if (type == 'ba'){
+    G <- sample_pa(n=network_size, m = parameter, power = 3, directed = TRUE)
   } else {
     cat('The setting of the network type is wrong.')
   }
