@@ -1,11 +1,19 @@
 # install.packages("igraph")
 library(igraph)
 
-er <- sample_gnp(n=10, p=3/9, TRUE)
+G <- sample_gnp(n=1000, p=3/999, TRUE)
 e <- E(er)
 length(e)
 
 head(e)
+
+node_degree = degree(G, mode='out') + degree(G, mode='in')
+node_degree_all  = degree(G,v=1, mode='all') 
+
+biggest_node = which(node_degree==max(node_degree))
+as.numeric(quantile(node_degree, 0.95))
+
+
 
 e[1]
 plot(er, edge.arrow.size=.5, vertex.label.color="black", vertex.label.dist=1.5)
@@ -272,3 +280,10 @@ SBM_network <- function(network_size, average_degree, p_cc){
 }
 a=3.2
 length(E(SBM_network(1000,a,a/999.5)))/1000
+
+
+g= sample_pa(1000, power =3, m =2, directed = T)
+length(E(g))/1000
+
+g= sample_smallworld(dim=1, size=1000, nei=3.2, p=0.05, loops = FALSE, multiple = FALSE)
+length(E(g))/1000
