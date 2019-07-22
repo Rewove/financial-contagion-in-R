@@ -1,11 +1,22 @@
 library(igraph)
-Ki = 0.04
 
-judge_bankrupt <- function(network, this_batch_neighbor, allready_bankrupt){
+
+judge_bankrupt <- function(network, this_batch_neighbor, allready_bankrupt, target_policy = FALSE){
   G <- network
+  node_degree_all  = degree(G, mode='all') 
   bankrupt_banks <- c()
+  Ki = 0.04
   
   for (i in this_batch_neighbor){
+    
+    if (target_policy == TRUE){
+      node_degree <- degree(G, v=i, mode = "all")
+      threshold <- as.numeric(quantile(node_degree_all, 0.95))
+      if (node_degree >= threshold){
+        Ki = 0.06
+      }
+    }
+    
     nodes_in <- as.numeric(neighbors(G, i, 'in'))
     nodes_in_bankrupt <- c()
     
