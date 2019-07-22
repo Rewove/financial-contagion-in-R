@@ -2,9 +2,11 @@ library(igraph)
 # source('~/Desktop/network/judge_bankrupt.R')
 source('judge_bankrupt.R')
 
-simulate_bankrupt <- function(network, method = 'random', type = 'banks', print_out=FALSE) {
+simulate_bankrupt <- function(network, method = 'random', type = 'banks', 
+                              target_policy = FALSE,  print_out=FALSE) {
   G <- network
   network_size <- length(V(G))
+  
   if (method == 'biggest'){
     node_degree = degree(G, mode='out') + degree(G, mode='in')
     initial_point <- which(node_degree==max(node_degree))
@@ -40,7 +42,7 @@ simulate_bankrupt <- function(network, method = 'random', type = 'banks', print_
       cat('\n')
     }
     
-    this_batch_bankrupt = judge_bankrupt(G, this_batch_neighbor, bankrupt_bank)
+    this_batch_bankrupt = judge_bankrupt(G, this_batch_neighbor, bankrupt_bank, target_policy = target_policy)
     this_batch_bankrupt = unique(this_batch_bankrupt)
     if (print_out == TRUE){
       cat('This batch bankrupt (after): ')
