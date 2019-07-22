@@ -5,7 +5,7 @@ source('plot_figuer.R')
 
 network_size <- 1000
 simulation_times <- 100 
-average_degree = 5
+average_degree = 6
 
 cat('The average degree cosnsidered here is:')
 cat(average_degree)
@@ -67,10 +67,10 @@ system.time({
   results <- main()
   cat('Saving the results ... ')
   cat('\n')
-  write.table(results,file="results_sbm_5.csv",quote=F,col.name=F,row.names=F)
+  write.table(results,file="results_sbm_6.csv",quote=F,col.name=F,row.names=F)
   plot_the_figure(p_cc, results$y_prob, results$y_exte, 
                   network_name = 'SBM Network',
                   xlab = 'p_cc: Probability of Core Connectivity',
-                  notes = 'at z=5')
+                  notes = 'at z=6')
 })
 

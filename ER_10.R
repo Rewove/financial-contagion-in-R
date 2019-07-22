@@ -56,15 +56,6 @@ main <- function(){
   
   return(do.call(rbind, Map(data.frame, y_prob=y_prob, y_exte=y_exte)))
   
-  write.table(results,file="results.csv",quote=F,col.name=F,row.names=F)
-  
-  plot(x_average_dgree, y_prob, pch=4, ylim=c(0,1),
-       ylab = 'Probability and Extent of Contagion',
-       xlab = 'Average Degree (Connectivity)')
-  points(x_average_dgree, y_exte, pch=16)
-  title(main='Probability and Extent of Contagion', 
-        sub='Random Choose One Bank Bankrupt on ER Random Network')
-  
 }
 
 system.time({
