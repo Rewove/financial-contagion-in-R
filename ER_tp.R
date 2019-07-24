@@ -7,7 +7,7 @@ source('simulate_bankrupt.R')
 
 network_size <- 1000
 simulation_times <- 100  # 100
-x_average_dgree <- seq(0, 10.1, 0.2)  # 0.2
+x_average_dgree <- seq(0, 10.1, 1)  # 0.2
 prob <- x_average_dgree/(network_size -1)
 contagion_threshould <- 0.05
 threshould <- network_size * contagion_threshould
@@ -62,8 +62,8 @@ system.time({
   results <- main()
   cat('Saving the results ... ')
   cat('\n')
-  write.table(results,file="results_er_target.csv", sep=',', quote=F,col.name=F,row.names=F)
-  plot_the_figure(p_cc, results$y_prob, results$y_exte, 
+  write.table(results,file="results_er_target_0.1.csv", sep=',', quote=F,col.name=F,row.names=F)
+  plot_the_figure(x_average_dgree, results$y_prob, results$y_exte, 
                   network_name = 'ER Network',
                   xlab = 'Average Degree (Connectivity)',
                   notes = 'Random Bankrupt with Target Policy')
