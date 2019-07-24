@@ -1,6 +1,14 @@
 # install.packages("igraph")
 library(igraph)
 
+G <- read_graph("soc-Slashdot0902.txt")
+
+
+G <- create_network(parameter = "soc-Slashdot0902.txt", type = "read")
+
+length(E(G))/length(V(G))
+
+
 G <- sample_gnp(n=1000, p=3/999, TRUE)
 e <- E(er)
 length(e)
@@ -13,7 +21,33 @@ node_degree_all  = degree(G,v=1, mode='all')
 biggest_node = which(node_degree==max(node_degree))
 as.numeric(quantile(node_degree, 0.95))
 
+g <- sample_pa(20, m=7, power = 9)
+length(E(g))/20
 
+
+g <- create_network(10000, 3, type = 'ba')
+
+G <- create_network(10000, 3/9999, type = 'er')
+quantile( E(g)$weight, na.rm=T)
+quantile( E(G)$weight)
+
+for (i in 1:1000){
+  cat("Test ")
+  cat(i)
+  cat("\n")
+  G <- create_network(10000, 3, type = 'ba')
+  r <- simulate_bankrupt(G, type = 'num', method = 'biggest')
+  
+  if(r>10000*0.05){
+    cat(r)
+    cat("\n")
+    cat("\n")
+    }
+}
+
+g =sample_smallworld(dim=10, size=10, nei=3, p=0.3)
+length(E(g))/10
+plot.igraph(g)
 
 e[1]
 plot(er, edge.arrow.size=.5, vertex.label.color="black", vertex.label.dist=1.5)
@@ -287,3 +321,92 @@ length(E(g))/1000
 
 g= sample_smallworld(dim=1, size=1000, nei=3.2, p=0.05, loops = FALSE, multiple = FALSE)
 length(E(g))/1000
+
+
+
+G <- create_network(10000, 3, type = 'ba')
+length(E(G))/length(V(G))
+r <- simulate_bankrupt(G, type = 'num')
+r
+
+
+network_size = 1000
+for (j in 0:10){
+  cat("Network weights quantile for average degree: ")
+  cat(j)
+  cat("\n")
+  G <- create_network(network_size, j/(network_size-1), type = 'er')
+  cat(quantile( E(G)$weight))
+  cat("\n")
+}
+
+G <- create_network(network_size, 3/network_size, type = 'er')
+r <- simulate_bankrupt(G, method = 'biggest', type = 'num', target_policy = TRUE, print_out = T)
+
+
+for (i in 2:7){
+  cat('-----------------------------------------------------\n')
+  cat("The average degree: ")
+  cat(i)
+  cat("\n")
+  cat("at small cc: ER")
+  low = get_low_bound_cc(i)
+  cat(round(low,4))
+  cat("\n")
+  G <- create_network(network_size, parameter = i, 
+                      p = low,  type = 'sbm later')
+  #print(quantile(E(G)$weight, na.rm=T))
+  print(assortativity_degree(G))
+  up= get_up_bound_cc(i)
+  cat("at big cc: pp=0")
+  cat(round(up,4))
+  cat("\n")
+  G <- create_network(network_size, parameter = i, 
+                      p = up,  type = 'sbm later')
+  #print(quantile(E(G)$weight, na.rm=T))
+  print(assortativity_degree(G))
+  cat("at 0 pp: 前者")
+  cat(round(0,4))
+  cat("\n")
+  G <- create_network(network_size, parameter = i, 
+                      p = 0,  type = 'sbm fomer')
+  print(quantile(E(G)$weight, na.rm=T))
+  print(assortativity_degree(G))
+  cat("at big pp: ER 前者")
+  cat(round(get_up_bound_pp(i),4))
+  cat("\n")
+  G <- create_network(network_size, parameter = i, 
+                      p = get_up_bound_pp(i),  type = 'sbm fomer')
+  print(quantile(E(G)$weight, na.rm=T))
+  print(assortativity_degree(G))
+}
+
+
+for (i in 2:7){
+  cat('-----------------------------------------------------\n')
+  cat("The average degree: ")
+  cat(i)
+  cat("\n")
+  
+  cat("at 0 pp: 前者")
+  cat(round(0,4))
+  cat("\n")
+  G <- create_network(network_size, parameter = i, 
+                      p = 0,  type = 'sbm fomer')
+  print(quantile(E(G)$weight, na.rm=T))
+  print(assortativity_degree(G))
+  
+  cat("at big pp: ER 前者")
+  cat(round(get_up_bound_pp(i),4))
+  cat("\n")
+  G <- create_network(network_size, parameter = i, 
+                      p = get_up_bound_pp(i),  type = 'sbm fomer')
+  print(quantile(E(G)$weight, na.rm=T))
+  print(assortativity_degree(G))
+}
+
+
+
+
+
+
