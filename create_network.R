@@ -33,15 +33,20 @@ ER_network <- function(network_size, prob){
 # so for a certain z the p is:
 # p = z/(network_size - 1/2)
 
-SBM_network <- function(network_size, average_degree, p_cc){
+SBM_network <- function(network_size, average_degree, p, later = TRUE){
   adjust = 1/(network_size-1)
   core_size <- network_size/2
   periphery_size <- network_size/2
-  p_pp <- (average_degree - (network_size - 1) * p_cc / 4) * (4/(3 * network_size -1))
-  #cat('p_pp is:')
-  #cat(p_pp)
-  #cat('\n')
-  p_cp <- p_pp
+  if (later == TRUE){
+    p_cc = p
+    p_pp <- (average_degree - (network_size - 1) * p_cc / 4) * (4/(3 * network_size -1))
+    p_cp <- p_pp
+  } else {
+    p_pp = p
+    p_cc <- (average_degree - (network_size -1) * p_pp / 4) * (4/(3 * network_size -1))
+    p_cp <- p_cc
+  }
+  
   p_cc <- p_cc+adjust
   p_cp <- p_cp+adjust
   p_pp <- p_pp+adjust
@@ -101,17 +106,34 @@ get_up_bound_cc <- function(average_degree, network_size = 1000){
   return (pcc)
 }
 
+get_up_bound_pp <- function(average_degree, network_size = 1000){
+  # this bound happened at the pp = cc
+  ppp = average_degree/(network_size-0.5)
+  return(ppp)
+}
 
-create_network <- function(network_size, parameter, type , p_cc = 0.003001501, print_out = FALSE){
+get_low_bound_pp <- function(average_degree, network_size = 1000){
+  # this bound happened at the cc = 0
+  pcc = 0
+  ppp = (average_degree - pcc / (4*(3*network_size - 1)))*4/(network_size-1)
+  return (ppp)
+}
+
+
+create_network <- function(network_size=1000, parameter, type , p = 0.003001501, print_out = FALSE){
   
   # first creat the graph without weights
   if (type == 'er'){
     # G <- sample_gnp(n=network_size, p=prob, TRUE)
     G <- ER_network(network_size, prob = parameter)
-  } else if (type == 'sbm'){
-    G <- SBM_network(network_size, average_degree = parameter, p_cc)
+  } else if (type == 'sbm later'){
+    G <- SBM_network(network_size, average_degree = parameter, p)
+  } else if (type == 'sbm fomer'){
+    G <- SBM_network(network_size, average_degree = parameter, p, later = FALSE)
   } else if (type == 'ba'){
-    G <- sample_pa(n=network_size, m = parameter, power = 3, directed = TRUE)
+    G <- sample_pa(n=network_size, m = parameter, power = 1, directed = TRUE)
+  } else if (type == 'read'){
+    G <- read_graph(file = parameter)
   } else {
     cat('The setting of the network type is wrong.')
   }
