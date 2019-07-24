@@ -60,7 +60,7 @@ system.time({
   results <- main()
   cat('Saving the results ... ')
   cat('\n')
-  write.table(results,file="results_ab_1.csv",quote=F,col.name=F,row.names=F)
+  write.table(results,file="results_ab_1.csv",sep=",",quote=F,col.name=F,row.names=F)
   plot_the_figure(x_average_dgree, results$y_prob, results$y_exte, 
                   network_name = 'BA Network',
                   xlab = 'Average Degree (Connectivity)',
