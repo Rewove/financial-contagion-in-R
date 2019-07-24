@@ -13,7 +13,7 @@ judge_bankrupt <- function(network, this_batch_neighbor, allready_bankrupt, targ
       node_degree <- degree(G, v=i, mode = "all")
       threshold <- as.numeric(quantile(node_degree_all, 0.95))
       if (node_degree >= threshold){
-        Ki = 0.06
+        Ki = 0.1
       }
     }
     
