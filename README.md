@@ -1,6 +1,12 @@
 # financial-contagion-in-R
 This folder rebuild the model in the paper: [Contagion in Financial Networks](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1577043) by Prasanna Gai.
 
+
+## License
+Even this work is open to evryone, some rights are reserved.
+For any other usage please contact the author.
+
+
 ## Create Network
 This script can create certain networks and initialize it to let it suitable for analyses.
 It can build:
